@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,8 +28,42 @@ public class CombinePredicates
 		{
 			changed = processInternal(d);
 		}
-		
+		combineSamePredicates(d);
 		//System.out.println("Passes = " + count);
+	}
+	
+	private static void combineSamePredicates(DocNode d) {
+		List<PredicateNode> predicateChildren = new LinkedList<PredicateNode>();
+		List<Condition> conditions = new LinkedList<Condition>();
+
+		for (DocNode child : d.getChildNodes()) {
+			if (!(child instanceof PredicateNode)) {
+				combineSamePredicates(child);
+			} else {
+				predicateChildren.add((PredicateNode) child);
+				conditions.add(((PredicateNode) child).getCondition());
+			}
+		}
+
+		if (predicateChildren.isEmpty())
+			return;
+
+		ListIterator<Condition> it = conditions.listIterator(conditions.size());
+		while (it.hasPrevious()) {
+			int iteratorIndex = it.previousIndex();
+			Condition cond = it.previous();
+			int firstIndex = conditions.indexOf(cond);
+			if (iteratorIndex != firstIndex) {
+				PredicateNode commonPredNode = predicateChildren.get(firstIndex);
+				for (DocNode pn : predicateChildren.get(iteratorIndex).getChildNodes()) {
+					commonPredNode.addChild(pn);
+				}
+
+				d.removeChild(predicateChildren.get(iteratorIndex));
+				it.remove();
+				predicateChildren.remove(iteratorIndex);
+			}
+		}
 	}
 	
 	/**
@@ -67,11 +102,7 @@ public class CombinePredicates
 		if (commCond.equals(new True())) //they are all independant
 			return changed;
 		
-		//if we get here, we are def changing something
-		changed = true;
-		
 		PredicateNode commonPredNode = new PredicateNode(commCond);
-		d.addChild(commonPredNode);
 		
 		//System.out.println("Creating new Node =" + commonPredNode);
 		
@@ -123,6 +154,12 @@ public class CombinePredicates
 			
 		}
 		
+		if (commonPredNode.children.size() > 0) {
+			//if we get here, we are def changing something
+			changed = true;
+			d.addChild(commonPredNode);
+		}
+		
 		return changed;
 	}
 	
@@ -170,7 +207,7 @@ public class CombinePredicates
 		{
 			AndCondition and = (AndCondition) c;
 			
-			for (Condition andC : and)
+			for (Condition andC : and.getConditions())
 			{
 				Set<Condition> subConds = mustBeTrue(andC);
 				ret.addAll(subConds);
