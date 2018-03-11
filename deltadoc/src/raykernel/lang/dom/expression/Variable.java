@@ -32,7 +32,10 @@ public class Variable extends ExpressionCondition
 	@Override
 	public String toString()
 	{
-		return name;
+		if(isTrue)
+			return name;
+		else
+			return "!" + name;
 	}
 	
 	@Override
@@ -63,6 +66,9 @@ public class Variable extends ExpressionCondition
 	@Override
 	public Expression clone()
 	{
-		return new Variable(name);
+		if (isTrue)
+			return new Variable(name);
+		else
+			return (new Variable(name)).negated();
 	}
 }

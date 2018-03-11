@@ -129,10 +129,17 @@ public class InvocationExpression extends ExpressionCondition
 	{
 		//TODO clone param list
 		
-		if (target != null)
-			return new InvocationExpression(target.clone(), method, parameters);
-		else
-			return new InvocationExpression(null, method, parameters);
+		if (target != null) {
+			if (isTrue)
+				return new InvocationExpression(target.clone(), method, parameters);
+			else
+				return new InvocationExpression(target.clone(), method, parameters).negated();
+		} else {
+			if (isTrue)
+				return new InvocationExpression(null, method, parameters);
+			else
+				return new InvocationExpression(null, method, parameters).negated();
+		}
 	}
 	
 }
