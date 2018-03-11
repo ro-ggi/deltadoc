@@ -204,7 +204,8 @@ public class EclipseExpressionAdapter
 			else if (op == org.eclipse.jdt.core.dom.InfixExpression.Operator.MINUS
 					|| op == org.eclipse.jdt.core.dom.InfixExpression.Operator.PLUS
 					|| op == org.eclipse.jdt.core.dom.InfixExpression.Operator.TIMES
-					|| op == org.eclipse.jdt.core.dom.InfixExpression.Operator.DIVIDE)
+					|| op == org.eclipse.jdt.core.dom.InfixExpression.Operator.DIVIDE
+					|| op == org.eclipse.jdt.core.dom.InfixExpression.Operator.REMAINDER)
 				return new ArithmeticExpression(left, right, op.toString());
 			else
 			{
