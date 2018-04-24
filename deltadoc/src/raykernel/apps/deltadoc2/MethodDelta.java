@@ -85,13 +85,13 @@ public class MethodDelta
 		
 		for (StatementRecord rec : stmts1_in)
 		{
-			rec.setPredicate(ConditionSimplifier.simplify(rec.getPredicate()));
+			rec = rec.setPredicate(ConditionSimplifier.simplify(rec.getPredicate()));
 			stmts1.add(rec);
 		}
 		
 		for (StatementRecord rec : stmts2_in)
 		{
-			rec.setPredicate(ConditionSimplifier.simplify(rec.getPredicate()));
+			rec = rec.setPredicate(ConditionSimplifier.simplify(rec.getPredicate()));
 			stmts2.add(rec);
 		}
 		
@@ -249,8 +249,8 @@ public class MethodDelta
 			
 			for (StatementRecord stmt : removedStmts)
 			{
-				br.append("If " + stmt.predicate + "\n");
-				br.append("   " + stmt.statement + "\n");
+				br.append("If " + stmt.getPredicate() + "\n");
+				br.append("   " + stmt.getStatement() + "\n");
 			}
 		}
 		
@@ -260,8 +260,8 @@ public class MethodDelta
 			
 			for (StatementRecord stmt : addedStmts)
 			{
-				br.append("If " + stmt.predicate + "\n");
-				br.append("   " + stmt.statement + "\n");
+				br.append("If " + stmt.getPredicate() + "\n");
+				br.append("   " + stmt.getStatement() + "\n");
 			}
 		}
 		
@@ -276,14 +276,14 @@ public class MethodDelta
 				
 				for (StatementRecord sr : tuple.second)
 				{
-					br.append("   " + sr.statement + "\n");
+					br.append("   " + sr.getStatement() + "\n");
 				}
 				
 				br.append("  Instead of \n");
 				
 				for (StatementRecord sr : tuple.first)
 				{
-					br.append("   " + sr.statement + "\n");
+					br.append("   " + sr.getStatement() + "\n");
 				}
 			}
 		}
@@ -298,8 +298,8 @@ public class MethodDelta
 				StatementRecord oldstmt = tuple.first;
 				StatementRecord newstmt = tuple.second;
 				
-				br.append("If " + newstmt.predicate + "\n");
-				br.append("   " + newstmt.statement + " instead of when " + oldstmt.predicate + "\n");
+				br.append("If " + newstmt.getPredicate() + "\n");
+				br.append("   " + newstmt.getStatement() + " instead of when " + oldstmt.getPredicate() + "\n");
 			}
 		}
 		

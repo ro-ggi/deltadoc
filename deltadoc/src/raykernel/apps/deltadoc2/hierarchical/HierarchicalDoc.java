@@ -7,6 +7,7 @@ import raykernel.apps.deltadoc2.DeltaDoc;
 import raykernel.apps.deltadoc2.MethodDelta;
 import raykernel.apps.deltadoc2.record.StatementRecord;
 import raykernel.lang.dom.condition.Condition;
+import raykernel.lang.dom.expression.True;
 import raykernel.lang.dom.naming.MethodSignature;
 import raykernel.lang.dom.statement.Statement;
 import raykernel.lang.dom.statement.VariableDeclarationStatement;
@@ -17,7 +18,9 @@ public class HierarchicalDoc
 	public static DocNode makeDoc(DeltaDoc doc)
 	{
 		//TODO added / removed classes
-		return makeDoc(doc.getChangedClasses());
+		DocNode output = makeDoc(doc.getChangedClasses());
+		output.sortChildNodes();
+		return output;
 	}
 	
 	public static DocNode makeDoc(List<ClassDelta> classDeltas)
@@ -111,7 +114,9 @@ public class HierarchicalDoc
 		{
 			PredicateNode pn = new PredicateNode(pred);
 			
-			DoNode dn = new DoNode();
+			// Use True nodes for uniting statements.
+			PredicateNode pn2 = new PredicateNode(new True());
+			PredicateNode pn3 = new PredicateNode(new True());
 			InsteadOfNode in = new InsteadOfNode();
 			
 			//All of these have the same predicate
@@ -121,7 +126,7 @@ public class HierarchicalDoc
 			for (StatementRecord sr : tuple.second)
 			{
 				StatementNode sn = new StatementNode(sr.getStatement());
-				dn.addChild(sn);
+				pn2.addChild(sn);
 			}
 			
 			//prev stmts
@@ -131,8 +136,10 @@ public class HierarchicalDoc
 				in.addChild(sn);
 			}
 			
-			pn.addChild(dn);
-			pn.addChild(in);
+			pn.addChild(pn2);
+			pn2.addChild(pn3);
+			pn2.addChild(in);
+			
 			ret.addChild(pn);
 		}
 		
@@ -144,9 +151,9 @@ public class HierarchicalDoc
 			StatementRecord oldstmt = tuple.first;
 			StatementRecord newstmt = tuple.second;
 			
-			PredicateNode pn = new PredicateNode(newstmt.predicate);
-			StatementNode sn = new StatementNode(newstmt.statement);
-			sn.setAltCondition(oldstmt.predicate);
+			PredicateNode pn = new PredicateNode(newstmt.getPredicate());
+			StatementNode sn = new StatementNode(newstmt.getStatement());
+			sn.setAltCondition(oldstmt.getPredicate());
 			
 			pn.addChild(sn);
 			ret.addChild(pn);

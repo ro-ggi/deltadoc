@@ -5,8 +5,8 @@ import raykernel.lang.dom.statement.Statement;
 
 public class StatementRecord
 {
-	public Condition predicate;
-	public Statement statement;
+	private Condition predicate;
+	private Statement statement;
 	
 	public StatementRecord(Condition predicate, Statement statement)
 	{
@@ -47,9 +47,9 @@ public class StatementRecord
 		return result;
 	}
 	
-	public void setPredicate(Condition pred)
+	public StatementRecord setPredicate(Condition pred)
 	{
-		predicate = pred;
+		return new StatementRecord(pred, statement);
 	}
 	
 	@Override

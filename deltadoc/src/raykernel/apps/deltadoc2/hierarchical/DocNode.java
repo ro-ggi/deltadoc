@@ -42,7 +42,7 @@ public abstract class DocNode
 		return min;
 	}
 	
-	public List<DocNode> getSortedChildNodes()
+	public void sortChildNodes()
 	{
 		Collections.sort(children, new Comparator<DocNode>() {
 			
@@ -52,8 +52,6 @@ public abstract class DocNode
 				return n1.getMinCharIndex() - n2.getMinCharIndex();
 			}
 		});
-		
-		return children;
 	}
 	
 }
