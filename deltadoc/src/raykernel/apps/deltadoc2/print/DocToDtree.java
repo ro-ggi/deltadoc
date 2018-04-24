@@ -49,7 +49,7 @@ public class DocToDtree extends DocPrinter
 		br.append("d.add(" + nodeID + "," + parentID + ",'" + node + "','http://google.com','hovertext','_self','"
 				+ getIcon(node) + "','" + getOpenIcon(node) + "');\n");
 		
-		for (DocNode child : node.getSortedChildNodes())
+		for (DocNode child : node.getChildNodes())
 		{
 			br.append(makeAddString(child, nodeID));
 		}

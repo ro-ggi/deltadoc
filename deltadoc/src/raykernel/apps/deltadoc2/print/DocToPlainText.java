@@ -25,7 +25,7 @@ public class DocToPlainText extends DocPrinter
 		
 		buf.append(indent(level) + node + "\n");
 		
-		for (DocNode child : node.getSortedChildNodes())
+		for (DocNode child : node.getChildNodes())
 		{
 			buf.append(nodeToString(child, level + 1));
 		}

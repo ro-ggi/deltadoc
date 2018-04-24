@@ -29,7 +29,7 @@ public class DocToHTML extends DocPrinter
 		{
 			buf.append(indent(level + 1) + "<ul>\n");
 			
-			for (DocNode child : node.getSortedChildNodes())
+			for (DocNode child : node.getChildNodes())
 			{
 				buf.append(nodeToString(child, level + 2));
 			}
