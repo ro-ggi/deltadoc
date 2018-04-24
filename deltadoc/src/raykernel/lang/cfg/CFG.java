@@ -343,9 +343,9 @@ public class CFG
 			unvisited.remove(n);
 			visited.add(n);
 			
-			//System.out.println("\nNew Node\n");
+			System.out.println("\nNew Node\n");
 			
-			//System.out.println(n);
+			System.out.println(n);
 			
 			for (CFGNode node : n.getSuccessors())
 			{
