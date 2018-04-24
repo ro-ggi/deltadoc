@@ -40,7 +40,7 @@ public class CFGPathEnumerator
 		// examine adjacent nodes
 		for (CFGNode node : nodes)
 		{
-			if (visited.contains(node) || node == null)
+			if (visited.contains(node))
 			{
 				continue;
 			}

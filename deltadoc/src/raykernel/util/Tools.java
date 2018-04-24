@@ -77,7 +77,8 @@ public class Tools
 
 		for (T s : ks)
 		{
-			list.add(s);
+			if (s != null)
+				list.add(s);
 		}
 
 		return list;
