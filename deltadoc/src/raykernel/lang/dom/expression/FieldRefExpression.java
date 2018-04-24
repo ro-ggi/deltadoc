@@ -2,6 +2,7 @@ package raykernel.lang.dom.expression;
 
 import java.util.Collection;
 
+import raykernel.lang.dom.condition.Condition;
 import raykernel.util.Tools;
 
 public class FieldRefExpression extends Variable
@@ -60,4 +61,9 @@ public class FieldRefExpression extends Variable
 		}
 	}
 	
+	@Override
+	public Condition negated()
+	{
+		return new PrefixExpression(this, "!");
+	}
 }

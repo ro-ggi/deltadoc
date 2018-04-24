@@ -1,5 +1,7 @@
 package raykernel.lang.dom.expression;
 
+import raykernel.lang.dom.condition.Condition;
+
 public class PrefixExpression extends OneOpExpressionCondition
 {
 	
@@ -23,4 +25,13 @@ public class PrefixExpression extends OneOpExpressionCondition
 		return new PrefixExpression(exp.clone(), op);
 	}
 	
+	@Override
+	public Condition negated()
+	{
+		if (op.equals("!") && exp instanceof Condition)
+		{
+			return (Condition) exp;
+		}
+		return super.negated();
+	}
 }

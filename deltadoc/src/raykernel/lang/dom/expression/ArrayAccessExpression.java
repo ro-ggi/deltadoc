@@ -2,6 +2,7 @@ package raykernel.lang.dom.expression;
 
 import java.util.Collection;
 
+import raykernel.lang.dom.condition.Condition;
 import raykernel.util.Tools;
 
 public class ArrayAccessExpression extends Variable
@@ -66,4 +67,9 @@ public class ArrayAccessExpression extends Variable
 		return array + "[" + index + "]";
 	}
 	
+	@Override
+	public Condition negated()
+	{
+		return new PrefixExpression(this, "!");
+	}
 }

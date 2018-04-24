@@ -3,6 +3,7 @@ package raykernel.lang.dom.expression;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import raykernel.lang.dom.condition.Condition;
 import raykernel.lang.dom.condition.ExpressionCondition;
 
 public class Variable extends ExpressionCondition
@@ -32,10 +33,7 @@ public class Variable extends ExpressionCondition
 	@Override
 	public String toString()
 	{
-		if(isTrue)
-			return name;
-		else
-			return "!" + name;
+		return name;
 	}
 	
 	@Override
@@ -66,9 +64,12 @@ public class Variable extends ExpressionCondition
 	@Override
 	public Expression clone()
 	{
-		if (isTrue)
-			return new Variable(name);
-		else
-			return (new Variable(name)).negated();
+		return new Variable(name);
+	}
+	
+	@Override
+	public Condition negated()
+	{
+		return new PrefixExpression(this, "!");
 	}
 }

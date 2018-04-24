@@ -1,5 +1,7 @@
 package raykernel.lang.dom.expression;
 
+import raykernel.lang.dom.condition.Condition;
+
 public class ParenthesizedExpression extends OneOpExpressionCondition
 {
 	
@@ -20,4 +22,9 @@ public class ParenthesizedExpression extends OneOpExpressionCondition
 		return new ParenthesizedExpression(exp.clone());
 	}
 	
+	@Override
+	public Condition negated()
+	{
+		return new PrefixExpression(this, "!");
+	}
 }

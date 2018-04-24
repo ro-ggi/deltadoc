@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import raykernel.lang.dom.condition.Condition;
 import raykernel.lang.dom.condition.ExpressionCondition;
 
 /**
@@ -30,22 +31,12 @@ public class InvocationExpression extends ExpressionCondition
 	@Override
 	public String toString()
 	{
-		if (isTrue)
-		{
-			if (target != null)
-				return target + "." + method + paramString();
-			else
-				return method + paramString();
-		}
+		if (target != null)
+			return target + "." + method + paramString();
 		else
-		{
-			if (target != null)
-				return "!" + target + "." + method + paramString();
-			else
-				return "!" + method + paramString();
-		}
+			return method + paramString();
 	}
-	
+
 	private String paramString()
 	{
 		StringBuffer ret = new StringBuffer();
@@ -130,16 +121,15 @@ public class InvocationExpression extends ExpressionCondition
 		//TODO clone param list
 		
 		if (target != null) {
-			if (isTrue)
-				return new InvocationExpression(target.clone(), method, parameters);
-			else
-				return new InvocationExpression(target.clone(), method, parameters).negated();
+			return new InvocationExpression(target.clone(), method, parameters);
 		} else {
-			if (isTrue)
-				return new InvocationExpression(null, method, parameters);
-			else
-				return new InvocationExpression(null, method, parameters).negated();
+			return new InvocationExpression(null, method, parameters);
 		}
 	}
 	
+	@Override
+	public Condition negated()
+	{
+		return new PrefixExpression(this, "!");
+	}
 }
