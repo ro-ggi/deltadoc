@@ -3,6 +3,7 @@ package raykernel.lang.dom.condition;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ import raykernel.util.Tools;
 public class AndCondition extends Condition implements Iterable<Condition>
 {
 	//The things anded-together
-	Set<Condition> conditions = new HashSet<Condition>();
+	Set<Condition> conditions = new LinkedHashSet<Condition>();
 	
 	public AndCondition()
 	{
@@ -30,6 +31,25 @@ public class AndCondition extends Condition implements Iterable<Condition>
 	public void addCondition(Condition c)
 	{
 		conditions.add(c);
+	}
+	
+	// Do not merge sub conditions before PreProcess.processCFG(), it depends on original form.
+	public void mergeSubConditions()
+	{
+		Set<Condition> correctedConditions = new LinkedHashSet<Condition>();
+		for (Condition c : conditions)
+		{
+			if (c instanceof AndCondition)
+			{
+				for (Condition c2 : ((AndCondition) c).getConditions())
+					correctedConditions.add(c2);
+			} else if (c instanceof OrCondition && ((OrCondition) c).conditions.size() == 1)
+			{
+				correctedConditions.addAll(((OrCondition) c).conditions);
+			} else
+				correctedConditions.add(c);
+		}
+		conditions = correctedConditions;
 	}
 	
 	@Override
@@ -106,7 +126,7 @@ public class AndCondition extends Condition implements Iterable<Condition>
 	@Override
 	public String toString()
 	{
-		return Tools.stringifyList(conditions, "&&");
+		return "(" + Tools.stringifyList(conditions, "&&") + ")";
 	}
 	
 	@Override
