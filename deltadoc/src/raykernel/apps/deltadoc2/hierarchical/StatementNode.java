@@ -1,6 +1,7 @@
 package raykernel.apps.deltadoc2.hierarchical;
 
 import raykernel.lang.dom.condition.Condition;
+import raykernel.lang.dom.expression.True;
 import raykernel.lang.dom.statement.Statement;
 
 public class StatementNode extends DocNode
@@ -27,7 +28,12 @@ public class StatementNode extends DocNode
 	public String toString()
 	{
 		if (altCondition != null)
-			return stmt + " instead of when " + altCondition;
+		{
+			if (altCondition.equals(new True()))
+				return stmt + " instead of always";
+			else
+				return stmt + " instead of when " + altCondition;
+		}
 		return stmt.toString();
 	}
 	
