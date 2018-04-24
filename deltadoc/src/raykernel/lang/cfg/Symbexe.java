@@ -90,7 +90,14 @@ public class Symbexe
 					out_flowset.addAssignment(((AssignmentExpression) e).getVariable(),
 							((AssignmentExpression) e).getExpression());
 					
-					out_flowset.removeConditionsWith(((AssignmentExpression) e).getVariable());
+					/* What was the use case for this? For flowing example this is not correct:
+					 * if (!var)
+					 *  var = true;
+					 *  someStmt;
+					 *  
+					 * someStmt has steel path predicate "if (!var)" and not "if (true)".
+					*/
+//					out_flowset.removeConditionsWith(((AssignmentExpression) e).getVariable());
 				}
 				else if (e instanceof PostfixExpression)
 				{
@@ -251,7 +258,10 @@ public class Symbexe
 				continue;
 			}
 			
-			flowsets.add(flowSetMap.get(new Tuple<Path, CFGNode>(p, node)));
+			FlowSet flowset = flowSetMap.get(new Tuple<Path, CFGNode>(p, node));
+			// Duplicates because some node types do not have statements.
+			if(!flowsets.contains(flowset))
+				flowsets.add(flowset);
 			
 		}
 		return flowsets;

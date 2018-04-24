@@ -9,6 +9,7 @@ import raykernel.lang.dom.condition.Condition;
 import raykernel.lang.dom.expression.ArrayCreationExpression;
 import raykernel.lang.dom.expression.Expression;
 import raykernel.lang.dom.expression.NewExpression;
+import raykernel.lang.dom.expression.True;
 import raykernel.lang.dom.expression.Variable;
 import raykernel.lang.dom.naming.Type;
 import raykernel.lang.dom.statement.Statement;
@@ -98,7 +99,7 @@ public class FlowSet
 		
 		for (Condition c : conditions)
 		{
-			if (c.getSubExpressions().contains(e))
+			if (c.getSubExpressions().contains(e) || c.equals(e))
 			{
 				toRem.add(c);
 			}
@@ -163,6 +164,11 @@ public class FlowSet
 		{
 			ret.addCondition(c);
 		}
+		
+		// No conditions for current statement, it is always reached: if (true).
+		if (ret.getConditions().isEmpty())
+			return new True();
+		
 		/*
 		for (Variable v : regFile.keySet())
 		{
@@ -179,5 +185,35 @@ public class FlowSet
 		return ret;
 		
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((conditions == null) ? 0 : conditions.hashCode());
+		result = prime * result + ((regFile == null) ? 0 : regFile.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FlowSet other = (FlowSet) obj;
+		if (conditions == null) {
+			if (other.conditions != null)
+				return false;
+		} else if (!conditions.equals(other.conditions))
+			return false;
+		if (regFile == null) {
+			if (other.regFile != null)
+				return false;
+		} else if (!regFile.equals(other.regFile))
+			return false;
+		return true;
+	}
 }
