@@ -1,8 +1,6 @@
 package raykernel.apps.deltadoc2.record;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import raykernel.lang.dom.condition.Condition;
@@ -14,7 +12,6 @@ public class MethodRecord
 	MethodSignature sig;
 	
 	Set<StatementRecord> stmtRecords = new HashSet<>();
-	Map<Statement, StatementRecord> statmentToRecordMap = new HashMap<>();
 	
 	public MethodRecord(MethodSignature sig)
 	{
@@ -23,20 +20,7 @@ public class MethodRecord
 	
 	public void put(Statement symbStmt, Condition pred)
 	{
-		StatementRecord record = statmentToRecordMap.get(symbStmt);
-		
-		//havent seen this stmt before
-		if (record == null)
-		{
-			record = new StatementRecord(pred, symbStmt);
-			statmentToRecordMap.put(symbStmt, record);
-		}
-		//or add this condition
-		else
-		{
-			record.setPredicate(record.getPredicate().or(pred));
-		}
-		
+		StatementRecord record = new StatementRecord(pred, symbStmt);
 		stmtRecords.add(record);
 	}
 	
