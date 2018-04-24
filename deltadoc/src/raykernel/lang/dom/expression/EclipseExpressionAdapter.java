@@ -11,6 +11,7 @@ import raykernel.lang.dom.condition.Condition;
 import raykernel.lang.dom.condition.OrCondition;
 import raykernel.lang.dom.naming.Declaration;
 import raykernel.lang.dom.naming.Type;
+import raykernel.util.Tools;
 
 public class EclipseExpressionAdapter
 {
@@ -162,31 +163,48 @@ public class EclipseExpressionAdapter
 			
 			org.eclipse.jdt.core.dom.InfixExpression.Operator op = inf.getOperator();
 			
+			List<Expression> operands = new LinkedList<>();
+			
 			Expression left = translate(inf.getLeftOperand());
 			Expression right = translate(inf.getRightOperand());
-			
-			//Condition Chains
+			operands.add(left);
+			operands.add(right);
+
+			for (Object o : inf.extendedOperands())
+				operands.add(translate((org.eclipse.jdt.core.dom.Expression) o));
+
+			// Condition Chains
 			if (op == org.eclipse.jdt.core.dom.InfixExpression.Operator.CONDITIONAL_AND)
 			{
 				AndCondition c = new AndCondition();
-				
-				if (!(left instanceof Condition) || !(right instanceof Condition))
-					throw new IllegalArgumentException("These need to be conditions: " + left + " " + right);
-				
-				c.addCondition((Condition) left);
-				c.addCondition((Condition) right);
-				
+
+				for (Expression e : operands)
+				{
+					if (!(e instanceof Condition))
+						throw new IllegalArgumentException("These need to be condition: " + e + " from " + operands);
+				}
+
+				for (Expression e : operands)
+				{
+					c.addCondition((Condition) e);
+				}
+
 				return c;
 			}
 			else if (op == org.eclipse.jdt.core.dom.InfixExpression.Operator.CONDITIONAL_OR)
 			{
 				OrCondition c = new OrCondition();
 				
-				if (!(left instanceof Condition) || !(right instanceof Condition))
-					throw new IllegalArgumentException("These need to be conditions: " + left + " " + right);
-				
-				c.addCondition((Condition) left);
-				c.addCondition((Condition) right);
+				for (Expression e : operands)
+				{
+					if (!(e instanceof Condition))
+						throw new IllegalArgumentException("These need to be condition: " + e + " from " + operands);
+				}
+
+				for (Expression e : operands)
+				{
+					c.addCondition((Condition) e);
+				}
 				
 				return c;
 			}
